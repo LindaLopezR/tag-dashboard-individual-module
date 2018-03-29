@@ -1,0 +1,176 @@
+<template name="tagDashboard">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <p  class="titulo">{{_ "filters"}}</p>
+        <hr class="linea-turquesa">
+
+        <form id="filtros-tarjetas" class="ui tiny form">
+          <label>
+            <i class="calendar icon"> </i>
+            {{_ "creation_period"}}
+          </label>
+          
+          <div class=" two fields">
+            <div class="field" data-type="created-after">
+              <label class="clearlabel">
+                {{_ "after"}}:
+                <a class="cleardate">{{_ "clean"}}</a>
+              </label>
+
+              <input name="fecha" type="text" class="timepickers" readonly>
+            </div>
+
+            <div class="field" data-type="created-before">
+              <label class="clearlabel">
+                {{_ "before"}}:
+                <a class="cleardate">{{_ "clean"}}</a>
+              </label>
+
+              <input name="fecha" type="text" class="timepickers" readonly>
+            </div>
+          </div>
+
+          <label>
+            <i class="calendar icon"> </i>
+            {{_ "expiration_period"}}
+          </label>
+          <div class=" two fields">
+            <div class="field" data-type="expired-after">
+              <label class="clearlabel">
+                {{_ "after"}}:
+                <a class="cleardate">{{_ "clean"}}</a>
+              </label>
+
+              <input name="fecha" type="text" class="timepickers" readonly>
+            </div>
+
+            <div class="field" data-type="expired-before">
+              <label class="clearlabel">
+                {{_ "before"}}:
+                <a class="cleardate">{{_ "clean"}}</a>
+              </label>
+
+              <input name="fecha" type="text" class="timepickers" readonly>
+            </div>
+          </div>
+
+          <div class=" inline field">
+            <label>{{_ "location"}}</label>
+            <select class="ui fluid dropdown" id="selectLocation">
+              <option value="all">{{_ "all"}}</option>
+              {{#each getLocations}}
+                <option value="{{_id}}">{{name}}</option>
+              {{/each}}
+            </select>
+          </div>
+
+          <div class="inline field">
+            <label>{{_ "category"}}</label>
+            <select class="ui fluid dropdown" id="selectCategory">
+              <option value="all">{{_ "all"}}</option>
+              {{#each getCategories}}
+                <option value="{{_id}}">{{name}}</option>
+              {{/each}}
+            </select>
+          </div>
+
+          <div class="inline field">
+            <label>{{_ "type"}}: </label>
+            <div class="field ui checkbox ">
+              <input type="checkbox" checked="true" id="checkRed">
+              <label class="tag rojo">{{_ "red"}}</label>
+            </div>
+
+            <div class="field ui checkbox ">
+              <input type="checkbox" checked="true" id="checkYellow">
+              <label class="tag ama">{{_ "yellow"}}</label>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="col-md-3 dotted ">
+        <div class="subtitulo turquesa">
+          <p>{{_ "current_cards"}}</p>
+        </div>
+        <div class="box-scroll">
+          {{#if showCurrentLeanCards}}
+            {{#each getCurrentLeanCards}}
+              {{>leanCardItem}}
+            {{/each}}
+          {{else}}
+            {{>NoLeanCard}}
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="subtitulo turquesa">
+          <p>{{_ "urgent_or_expired_cards"}}</p>
+        </div>
+        <div class="box-scroll">
+          {{#if showExpiredLeanCards}}
+            {{#each getExpiredLeanCards}}
+              {{>leanCardItem}}
+            {{/each}}
+          {{else}}
+            {{>NoLeanCard}}
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="subtitulo gris-4">
+          <p>{{_ "closed_tags"}}</p>
+        </div>
+        <div class="gris-1 box-scroll">
+          {{#if showClosedLeanCards}}
+            {{#each getClosedLeanCards}}
+              {{>leanCardItem}}
+            {{/each}}
+          {{else}}
+            {{>NoLeanCard}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<template name="leanCardItem">
+  <div class="tarjeta {{getCardClass type}}" data-id="{{_id}}">
+    <p class="fecha">
+      {{#if isUrgent}}
+        <span class="ui teal tag label">{{_ "urgent"}}</span>
+      {{/if}}
+      {{#if toApprove}}
+        <span class="ui teal tag label">{{_ "pending"}}</span>
+      {{/if}}
+      {{_ "date"}}: {{formatDate originDate}}
+    </p>
+
+    <p class="p-tag">
+      <b class="asignado-{{getUserClass type}}">{{_ "description_of_the_problem"}}:</b>
+      {{getDescription descriptions}}
+    </p>
+    <p class="p-tag">
+      <b class="{{getBoldClass type}}">{{_ "location"}}:</b>
+      {{getLocation location}}
+    </p>
+    <p class="p-tag">
+      <b class="{{getBoldClass type}}">{{_ "classification"}}:</b> 
+      {{getCategory category}}
+    </p>
+  </div>
+</template>
+
+<template name="NoLeanCard">
+  <div class=" NoLeanCard">
+    <img src="/img/app-11.png" class="img-responsive ui centered image">
+    <p>{{_ "there_are_no_cards"}}</p>
+  </div>
+</template>
